@@ -1,0 +1,47 @@
+Given an array w of positive integers, where w[i] describes the weight of index i, write a function pickIndex which randomly picks 
+an index in proportion to its weight.
+Note:
+1 <= w.length <= 10000
+1 <= w[i] <= 10^5
+pickIndex will be called at most 10000 times.
+
+class Solution {
+public:
+    vector<int> arr;
+    Solution(vector<int>& w) {
+        int cnt=0;
+        for(int weight:w)
+        {
+            cnt+=weight;
+            arr.push_back(cnt);
+        }
+        
+    }
+    int myBinarySearch(vector<int> arr,int k)
+    {
+        int l=0,r=arr.size()-1;
+        while(l<r)
+        {
+            int mid=l+(r-l)/2;
+            if(arr[mid]==k)
+                return mid;
+            else if(k<arr[mid])
+                r=mid-1;
+            else l=mid+1;
+        }
+        if(arr[l]<k)
+            l++;
+        return l;
+    }
+    int pickIndex() {
+        int ind=(rand()%arr[arr.size()-1])+1;//because no 0 weight present
+        int ansInd=myBinarySearch(arr,ind);
+        return ansInd;
+    }
+};
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution* obj = new Solution(w);
+ * int param_1 = obj->pickIndex();
+ */
