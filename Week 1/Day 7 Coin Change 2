@@ -1,0 +1,34 @@
+You are given coins of different denominations and a total amount of money. Write a function to compute the number of combinations
+that make up that amount. You may assume that you have infinite number of each kind of coin.
+
+class Solution {
+public:
+    int change(int amount, vector<int>& coins) {
+        if(amount==0 )
+            return 1;
+        if(coins.size()==0)
+            return 0;
+        sort(coins.begin(),coins.end());
+        vector<int> dp(amount+1,0);
+        dp[0]=1;
+        for(int j=1;j<=amount;j++)
+        {
+            if(j>=coins[0])
+            {
+                if(j%coins[0]==0)
+                    dp[j]=1;
+            }
+        }
+        for(int i=1;i<coins.size();i++)
+        {
+            for(int j=1;j<=amount;j++)
+            {
+                if(j>=coins[i])
+                {
+                    dp[j]+=dp[j-coins[i]];
+                }
+            }
+        }
+        return dp[amount];
+    }
+};
