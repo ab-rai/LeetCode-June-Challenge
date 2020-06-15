@@ -1,0 +1,50 @@
+There are n cities connected by m flights. Each flight starts from city u and arrives at v with a price w.
+
+Now given all the cities and flights, together with starting city src and the destination dst, your task is to find the cheapest price
+from src to dst with up to k stops. If there is no such route, output -1.
+
+
+class Solution {
+public:
+    int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int K) {
+        vector<vector<pair<int,int> > > weightMatrix;
+        for(int i=0;i<n;i++)
+        {
+            vector<pair<int,int>> temp;
+            weightMatrix.push_back(temp);
+        }
+        for(int i=0;i<flights.size();i++)
+        {
+            weightMatrix[flights[i][0]].push_back({flights[i][1],flights[i][2]});
+        }
+        queue<pair<int,int>> q;
+        q.push({src,0});
+        int mn=INT_MAX;
+        while(!q.empty() && K>=0)
+        {
+            int currSize=q.size();
+            while(currSize--)
+            {
+                pair<int,int> currPair=q.front();
+                q.pop();
+                int currCity=currPair.first;
+                int totalPrice=currPair.second;
+        
+                for(int j=0;j<weightMatrix[currCity].size();j++)
+                { 
+                    int flightToCity=weightMatrix[currCity][j].first;
+                    int price=weightMatrix[currCity][j].second;
+                    totalPrice+=price;
+                    if(flightToCity==dst)
+                            mn=min(mn,totalPrice);
+                        if(totalPrice<mn)
+                            q.push({flightToCity,totalPrice});
+                    totalPrice-=price;
+                }
+                
+            }
+            K--;
+        }
+        return (mn==INT_MAX)?-1:mn;
+    }
+};
